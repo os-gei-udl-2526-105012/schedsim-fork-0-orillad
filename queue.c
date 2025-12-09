@@ -42,6 +42,13 @@ Process* dequeue(){
     }
 }
 
+Process* peek(){
+    if (elements <= 0){
+        return NULL;
+    }
+    return queue[0];
+}
+
 void cleanQueue(){
     free(queue);
 }
@@ -78,7 +85,6 @@ void setQueueFromList(Process* list){
         *(queue[i])=list[i];
     }
 }
-
 
 
 

@@ -10,6 +10,7 @@
 void init_queue(void);
 int enqueue(Process* item);
 Process* dequeue(void);
+Process* peek(void);
 size_t get_queue_size(void);
 void cleanQueue(void);
 char* queueToString(void);
