@@ -137,6 +137,19 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
                 procTable[p].lifecycle[current_time] = -1;
             }
         }
+
+        /* Pas 5: avançar una unitat de CPU per al procés actual i comprovar si finalitza */
+        if (current != NULL){
+            q_used++;
+            int burst_consumed = getCurrentBurst(current, (int)current_time) + 1;
+            if (burst_consumed >= current->burst){
+                current->completed = true;
+                current->return_time = (int)current_time + 1 - current->arrive_time;
+                current->lifecycle[current_time] = Finished;
+                current = NULL;
+                q_used = 0;
+            }
+        }
     }
 
     printSimulation(nprocs,procTable,duration);
