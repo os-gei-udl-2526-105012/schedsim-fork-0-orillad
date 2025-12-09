@@ -69,6 +69,9 @@ int getCurrentBurst(Process* proc, int current_time){
 
 int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modality, int quantum){
 
+    Process *current = NULL;
+    int q_used = 0;
+
     qsort(procTable,nprocs,sizeof(Process),compareArrival);
 
     init_queue();
@@ -105,6 +108,20 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
             }
             setQueueFromList(list);
             free(list);
+        }
+
+        /* Pas 3: seleccionar procés si la CPU és lliure */
+        if (current == NULL){
+            current = dequeue();
+            q_used = 0;
+
+            if (current != NULL && current->response_time == 0){
+                current->response_time = (int)current_time - current->arrive_time;
+            }
+        }
+
+        if (current != NULL){
+            current->lifecycle[current_time] = Running;
         }
     }
 
