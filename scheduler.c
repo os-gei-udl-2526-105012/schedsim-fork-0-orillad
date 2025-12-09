@@ -93,6 +93,19 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
                 procTable[p].lifecycle[current_time] = Ready;
             }
         }
+
+        /* Pas 2: si cal, reordenem la cua per a SRTF o prioritats en mode preemptiu */
+        if (modality == PREEMPTIVE && get_queue_size() > 1){
+            Process* list = transformQueueToList();
+            size_t qsize = get_queue_size();
+            if (algorithm == SJF){
+                qsort(list, qsize, sizeof(Process), compareBurst);
+            } else if (algorithm == PRIORITIES){
+                qsort(list, qsize, sizeof(Process), comparePriority);
+            }
+            setQueueFromList(list);
+            free(list);
+        }
     }
 
     printSimulation(nprocs,procTable,duration);

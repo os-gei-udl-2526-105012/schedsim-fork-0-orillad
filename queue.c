@@ -66,8 +66,8 @@ char* queueToString(){
 }
 
 Process* transformQueueToList(){
-    Process* _list = malloc(sizeof(elements-1)*sizeof(Process));
-    for (int i=0; i<elements; i++){
+    Process* _list = malloc(elements * sizeof(Process));
+    for (size_t i = 0; i < elements; i++){
         _list[i]=*queue[i];
     }
     return _list;
@@ -78,7 +78,6 @@ void setQueueFromList(Process* list){
         *(queue[i])=list[i];
     }
 }
-
 
 
 
