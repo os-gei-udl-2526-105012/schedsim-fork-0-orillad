@@ -160,6 +160,49 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
                 procTable[p].waiting_time++;
             }
         }
+
+        /* Pas 7: regles de preempció/quantum segons algorisme/modalitat */
+        if (modality == PREEMPTIVE && current != NULL){
+            if (algorithm == RR){
+                if (q_used >= quantum){
+                    enqueue(current);
+                    current = NULL;
+                    q_used = 0;
+                }
+            } else if (algorithm == SJF){
+                /* SRTF: si el front de la cua té burst pendent menor, fer preemption */
+                Process* candidate = dequeue();
+                if (candidate != NULL){
+                    int current_remaining = current->burst - getCurrentBurst(current, (int)current_time+1);
+                    int cand_remaining = candidate->burst - getCurrentBurst(candidate, (int)current_time);
+                    if (cand_remaining < current_remaining){
+                        enqueue(current);
+                        current = candidate;
+                        q_used = 0;
+                        if (current->response_time == 0){
+                            current->response_time = (int)current_time + 1 - current->arrive_time;
+                        }
+                    } else {
+                        enqueue(candidate);
+                    }
+                }
+            } else if (algorithm == PRIORITIES){
+                /* Preemption per millor prioritat (comparació simple) */
+                Process* candidate = dequeue();
+                if (candidate != NULL){
+                    if (comparePriority(candidate, current) < 0){
+                        enqueue(current);
+                        current = candidate;
+                        q_used = 0;
+                        if (current->response_time == 0){
+                            current->response_time = (int)current_time + 1 - current->arrive_time;
+                        }
+                    } else {
+                        enqueue(candidate);
+                    }
+                }
+            }
+        }
     }
 
     printSimulation(nprocs,procTable,duration);
