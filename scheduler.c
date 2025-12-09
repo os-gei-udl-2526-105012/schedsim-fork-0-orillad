@@ -123,6 +123,20 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
         if (current != NULL){
             current->lifecycle[current_time] = Running;
         }
+
+        /* Pas 4: marcar estats per a la resta de processos en aquest tick */
+        for (size_t p = 0; p < nprocs; p++){
+            if (&procTable[p] == current){
+                continue;
+            }
+            if (procTable[p].completed){
+                procTable[p].lifecycle[current_time] = Finished;
+            } else if ((size_t)procTable[p].arrive_time <= current_time){
+                procTable[p].lifecycle[current_time] = Ready;
+            } else {
+                procTable[p].lifecycle[current_time] = -1;
+            }
+        }
     }
 
     printSimulation(nprocs,procTable,duration);
