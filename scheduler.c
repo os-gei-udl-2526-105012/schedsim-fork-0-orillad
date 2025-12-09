@@ -69,8 +69,6 @@ int getCurrentBurst(Process* proc, int current_time){
 
 int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modality, int quantum){
 
-    Process * _proclist;
-
     qsort(procTable,nprocs,sizeof(Process),compareArrival);
 
     init_queue();
@@ -85,6 +83,16 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
         procTable[p].return_time = 0;
         procTable[p].response_time = 0;
         procTable[p].completed = false;
+    }
+
+    /* Pas 1: afegim a la cua els processos que arriben a cada instant */
+    for (size_t current_time = 0; current_time < duration; current_time++){
+        for (size_t p = 0; p < nprocs; p++){
+            if ((size_t)procTable[p].arrive_time == current_time){
+                enqueue(&procTable[p]);
+                procTable[p].lifecycle[current_time] = Ready;
+            }
+        }
     }
 
     printSimulation(nprocs,procTable,duration);
