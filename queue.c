@@ -34,7 +34,7 @@ Process* dequeue(){
     } else {
         Process* process = queue[0];
         elements--;
-        queue = realloc(queue,(elements+1)*sizeof(Process));
+        queue = realloc(queue,(elements+1)*sizeof(Process*));
         for(int p=1; p<=elements; p++){
             queue[p-1]=queue[p];
         }
@@ -51,6 +51,8 @@ Process* peek(){
 
 void cleanQueue(){
     free(queue);
+    queue = NULL;
+    elements = 0;
 }
 
 char* queueToString(){
@@ -85,7 +87,6 @@ void setQueueFromList(Process* list){
         *(queue[i])=list[i];
     }
 }
-
 
 
 
