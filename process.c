@@ -83,26 +83,34 @@ int compareBurst(const void *s1, const void *s2){
     Process *p2 = (Process *)s2;
     if (p1->burst > p2->burst){
         return 1; 
-    }
-    else if (p1->burst < p2->burst){
+    } else if (p1->burst < p2->burst){
         return -1;
     }
-    else{
-        return 0;
+    /* Empats: primer qui arriba abans, després id menor */
+    if (p1->arrive_time > p2->arrive_time){
+        return 1;
+    } else if (p1->arrive_time < p2->arrive_time){
+        return -1;
     }
+    return (p1->id > p2->id) ? 1 : (p1->id < p2->id ? -1 : 0);
 }
 
 int comparePriority(const void *s1, const void *s2){
     Process *p1 = (Process *)s1;
     Process *p2 = (Process *)s2;
-    if (p1->priority > p2->priority) 
+    if (p1->priority > p2->priority){ 
         return 1; 
-    else if (p1->priority < p2->priority)  
+    } else if (p1->priority < p2->priority){  
         return -1;
-    else
-        return 0;
+    }
+    /* Empats: primer qui arriba abans, després id menor */
+    if (p1->arrive_time > p2->arrive_time){
+        return 1;
+    } else if (p1->arrive_time < p2->arrive_time){
+        return -1;
+    }
+    return (p1->id > p2->id) ? 1 : (p1->id < p2->id ? -1 : 0);
 }
-
 
 
 
