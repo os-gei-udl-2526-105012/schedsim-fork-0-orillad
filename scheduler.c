@@ -150,6 +150,16 @@ int run_dispatcher(Process *procTable, size_t nprocs, int algorithm, int modalit
                 q_used = 0;
             }
         }
+
+        /* Pas 6: actualitzar temps d'espera */
+        for (size_t p = 0; p < nprocs; p++){
+            if (&procTable[p] == current){
+                continue;
+            }
+            if (!procTable[p].completed && (size_t)procTable[p].arrive_time <= current_time){
+                procTable[p].waiting_time++;
+            }
+        }
     }
 
     printSimulation(nprocs,procTable,duration);
